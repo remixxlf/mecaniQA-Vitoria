@@ -7,15 +7,10 @@ A MecâniQA - Automotive Tech é uma empresa feirense situada na Avenida Viscond
 ## Sobre o projeto
 
 ### Contexto Inicial do Produto
-Os projetos deste programa serão implementados em grupos de 5 membros. Não são 4 membros, nem tão pouco 6 membros, mas 5. Exceções devem ser comunicadas ao orientador e registradas e autorizadas por ele. Cada time vai ter um nome conforme planilha: Nome dos Times e Seus Membros. Os nomes dos times serão sorteados no nosso primeiro encontro.
+
 Nossa base de clientes está crescendo, e precisamos construir a primeira versão do nosso sistema interno de gerenciamento de estoque e serviços (o MVP - Minimum Viable Product). Para garantir que a base do nosso software seja sólida e executada com o máximo de performance inicial, o nosso Diretor de Engenharia (o professor) determinou que o núcleo do sistema seja construído gerenciando a memória de forma manual e contígua.
 Neste primeiro desafio, você e sua equipe implementarão um MVP na linguagem de programação Java. A missão de vocês é desenvolver o módulo fundacional do sistema. Vocês deverão modelar os dados fundamentais do nosso negócio (Peças e Serviços) e criar o motor de gerenciamento dessas informações utilizando unicamente listas estáticas na memória.
 
-### Objetivos dessa Sprint:
-* Compreender e implementar Tipos Abstratos de Dados (TAD).
-* Dominar a manipulação de listas estáticas (Arrays Unidimensionais).
-* Implementar algoritmos de busca linear.
-* Analisar e vivenciar na prática as limitações e características das estruturas de dados estáticas.
 
 ## Membros da Equipe
 
