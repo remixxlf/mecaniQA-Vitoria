@@ -20,8 +20,8 @@ Neste primeiro desafio, você e sua equipe implementarão um MVP na linguagem de
 ## Membros da Equipe
 
 * Brendha Maria Costa Seixas 
-*Matheus da Costa Pereira
-*Guilherme Pereira Barreto 
-*Victor Paulo Teixeira da Silva e Silva 
+* Matheus da Costa Pereira
+* Guilherme Pereira Barreto 
+* Victor Paulo Teixeira da Silva e Silva 
 * Luis Filipe Silva Lima
 * AGSON ASAFE
