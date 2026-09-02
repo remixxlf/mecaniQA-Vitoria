@@ -19,3 +19,10 @@ gradlew.bat
 # OS-specific
 .DS_Store
 Thumbs.db
+
+# Eclipse
+.classpath
+.project
+.settings/
+bin/
+
