@@ -7,6 +7,7 @@ public class OS {
 	int numeroOS;
 	Clientes cliente;
 	Carros carro;
+	StatusOs status;
 
 	List<Servico> servicos;
 	List<Pecas> pecas;
@@ -18,6 +19,15 @@ public class OS {
 		this.carro = carro;
 		this.servicos = new ArrayList<>();
 		this.pecas = new ArrayList<>();
+		this.status = StatusOs.Criada;
+	}
+
+	public StatusOs getStatus() {
+		return status;
+	}
+
+	public void setStatus(StatusOs status) {
+		this.status = status;
 	}
 
 	public int getNumeroOS() {

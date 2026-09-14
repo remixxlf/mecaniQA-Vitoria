@@ -2,12 +2,16 @@ package services;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import entidades.OS;
 import entidades.Pecas;
 import entidades.Servico;
+import entidades.StatusOs;
 
 public class Gerenciador {
 	static List<Pecas> pecas = new ArrayList<>();
 	static List<Servico> servicos = new ArrayList<>();
+	static FilaAtendimento filaAtendimento = new FilaAtendimento();
 
 	public static void createPeca(int codNumerico, String nomePeca, String nomeFabricante, int quantidadePeca,
 			double precoVenda, double precoCusto) {
@@ -129,4 +133,19 @@ public class Gerenciador {
 		System.out.println("Serviço com código " + codigoBuscado + " não encontrado.");
 	}
 
+	public static void despacharOs(OS os) {
+		if (os.getStatus() == StatusOs.Aprovada) {
+
+			for (Servico s : os.getServicos()) {
+				filaAtendimento.enfileirar(s);
+			}
+			System.out.println("Serviços da OS #" + os.getNumeroOS() + " despachados para a fila com sucesso!");
+		} else {
+			System.out.println("A OS #" + os.getNumeroOS() + " ainda não está aprovada. Serviços retidos.");
+		}
+	}
+
+	public static Servico atenderProximoServico() {
+		return filaAtendimento.desenfileirar();
+	}
 }
