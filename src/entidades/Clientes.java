@@ -15,7 +15,7 @@ public class Clientes {
 		this.nome = nome;
 		this.email = email;
 		this.telefoneZapZap = telefoneZapZap;
-		this.codIndent = gerador.nextInt(1, 1001);
+		this.codIndent = codIdent;
 		this.carrosCliente = new ArrayList<>();
 
 	}
@@ -70,5 +70,10 @@ public class Clientes {
 
 	public void setGerador(Random gerador) {
 		this.gerador = gerador;
+	}
+
+	public String toCsv(){
+		return codIndent+";"+ nome+";"+email+";"+telefoneZapZap;
+
 	}
 }

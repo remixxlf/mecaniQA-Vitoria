@@ -7,11 +7,19 @@ import entidades.OS;
 import entidades.Pecas;
 import entidades.Servico;
 import entidades.StatusOs;
+import entidades.Carros;
+import entidades.Clientes;
+import entidades.Pedido;
+import entidades.StatusOs;
 
 public class Gerenciador {
 	static List<Pecas> pecas = new ArrayList<>();
 	static List<Servico> servicos = new ArrayList<>();
 	static FilaAtendimento filaAtendimento = new FilaAtendimento();
+	static List<Clientes> clientes = new ArrayList<>();
+	static List<OS> ordensServico = new ArrayList<>();
+	static List<Pedido> pedidos = new ArrayList<>();
+
 
 	public static void createPeca(int codNumerico, String nomePeca, String nomeFabricante, int quantidadePeca,
 			double precoVenda, double precoCusto) {
@@ -134,15 +142,40 @@ public class Gerenciador {
 	}
 
 	public static void despacharOs(OS os) {
-		if (os.getStatus() == StatusOs.Aprovada) {
-
+		if (os.getStatus() == StatusOs.AGUARDANDO_EXECUCAO) {
 			for (Servico s : os.getServicos()) {
 				filaAtendimento.enfileirar(s);
 			}
-			System.out.println("Serviços da OS #" + os.getNumeroOS() + " despachados para a fila com sucesso!");
+			System.out.println("Servicos da OS #" + os.getNumeroOS() + " despachados para a fila com sucesso!");
 		} else {
-			System.out.println("A OS #" + os.getNumeroOS() + " ainda não está aprovada. Serviços retidos.");
+			System.out.println("A OS #" + os.getNumeroOS() + " ainda nao esta aguardando execucao. Servicos retidos.");
 		}
+	}
+	public static OS abrirOS(Clientes cliente, Carros carro) {
+		OS novaOs = new OS(cliente, carro);
+		ordensServico.add(novaOs);
+		System.out.println("OS #" + novaOs.getNumeroOS() + " aberta com sucesso!");
+		return novaOs;
+	}
+
+	public static void mudarStatusOs(OS os, StatusOs novoStatus) {
+		os.setStatus(novoStatus);
+		System.out.println("OS #" + os.getNumeroOS() + " agora esta " + novoStatus);
+		if (novoStatus == StatusOs.AGUARDANDO_EXECUCAO) {
+			despacharOs(os);
+		}
+	}
+
+	public static Servico atenderProximoServico() {
+		return filaAtendimento.desenfileirar();
+	}
+
+
+	public static Pedido abrirPedido() {
+		Pedido novoPedido = new Pedido();
+		pedidos.add(novoPedido);
+		System.out.println("Pedido #" + novoPedido.getCodigoPedido() + " aberto com sucesso!");
+		return novoPedido;
 	}
 
 	public static Servico atenderProximoServico() {

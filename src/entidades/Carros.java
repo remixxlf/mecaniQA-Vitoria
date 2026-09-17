@@ -9,6 +9,7 @@ public class Carros {
 		this.modelo = modelo;
 		this.placa = placa;
 		this.ano = ano;
+		this.estilo= estilo;
 	}
 
 	public String getModelo() {
@@ -33,6 +34,22 @@ public class Carros {
 
 	public void setAno(String ano) {
 		this.ano = ano;
+	}
+
+	public EstiloCarro getEstilo() {
+		return estilo;
+	}
+
+	public void setEstilo(EstiloCarro estilo) {
+		this.estilo = estilo;
+	}
+
+	public String toCSV() {
+		return placa";"+modelo+";"+ano+";"+estilo.name();
+	}
+	public static Carros fromCSV(String linha) {
+		String[] c=linha.split(";");
+		return new Carros(c[0],c[1],c[2], EstiloCarro.valueOf(c[3]));
 	}
 
 }

@@ -1,6 +1,6 @@
 package entidades;
 
-public class Servico {
+public class Servico implements ItemCatalogo {
 
 	int codNumerico;
 	String descricaoServico;
@@ -45,6 +45,22 @@ public class Servico {
 
 	public void setValorMaoObra(double valorMaoObra) {
 		this.valorMaoObra = valorMaoObra;
+	}
+
+	@Override
+	public String getNomeParaOrdenacao(){
+		return descricaoServico;
+	}
+	@Override
+	public int getCodigoParaOrdenacao(){
+		return codNumerico;
+	}
+	public String toCsv(){
+		return codNumerico+";"+descricaoServico+";"+tempoEstimado+";"+valorMaoObra;
+	}
+	public static Servico from Csv(String linha){
+		String[] c-linha.split(";");
+		return new Servico(Integer.parseInt(c[0]), c[1], Integer.parseInt(c[2]), Double.parseDouble(c[3]));
 	}
 
 }

@@ -13,7 +13,7 @@ public class FilaAtendimento {
 		fila.add(x);
 	}
 
-	public boolean estaVazia(Servico x) {
+	public boolean estaVazia() {
 		return this.fila.isEmpty();
 	}
 	
