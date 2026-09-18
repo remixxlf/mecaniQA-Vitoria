@@ -1,4 +1,4 @@
-# MecâniQA - Automotive Tech
+## MecâniQA - Automotive Tech
 
 ## Sobre a empresa
 
@@ -21,37 +21,3 @@ Neste primeiro desafio, você e sua equipe implementarão um MVP na linguagem de
 * Luis Filipe Silva Lima
 * AGSON ASAFE
 
-## OAT 2 - Ordenando a Fila
-
-Segunda fase do MVP: Modulo de Atendimento e Vendas.
-
-### O que foi implementado
-
-* **Clientes e Carros:** cliente com codigo, nome, WhatsApp e e-mail, com lista dinamica de carros associados. Carro com modelo, placa, ano e estilo restrito pelo enum `EstiloCarro` (HATCH, SEDAN, SUV).
-* **Ordem de Servico:** codigo unico gerado pelo sistema, lista dinamica de servicos, ciclo de vida pelo enum `StatusOs` (EM_ABERTO, AGUARDANDO_EXECUCAO, EM_EXECUCAO, FINALIZADA), bloqueio de adicao/remocao apos o fechamento e os metodos `quantidadeServicos()`, `valorTotal()` e `tabelaServicos()`.
-* **Fila de Atendimento (FIFO):** implementada do zero com lista encadeada (`enfileirar`, `desenfileirar`, `espiarProximo`, `estaVazia`). Ao mudar a OS para AGUARDANDO_EXECUCAO os servicos sao despachados para a fila.
-* **Pedidos:** codigo unico, estrutura intermediaria `ItemPedido` (peca + quantidade), calculo de total, aplicacao de desconto, relatorio e bloqueio apos finalizacao.
-* **Motor de ordenacao:** Bubble Sort implementado do zero em `OrdenacaoService`, recebendo a chave via enum `ChaveOrdenacao` (NOME ou CODIGO_IDENTIFICADOR), ordenando pecas e servicos pela interface `ItemCatalogo`.
-* **Persistencia CSV:** `PersistenciaService` grava e le Clientes, Carros, Pecas, Servicos, Pedidos e OS em arquivos `.csv` com delimitador `;` na pasta `dados/`.
-
-### Estrutura
-
-```
-src/
-  entidades/   Clientes, Carros, Pecas, Servico, OS, Pedido, ItemPedido, ItemCatalogo e enums
-  services/    Gerenciador, FilaAtendimento, OrdenacaoService, PersistenciaService
-  main/        Main (demonstracao de todos os requisitos)
-```
-
-### Como executar
-
-```bash
-gradle run
-```
-
-ou, sem Gradle:
-
-```bash
-javac -encoding UTF-8 -d bin $(find src -name "*.java")
-java -cp bin main.Main
-```
