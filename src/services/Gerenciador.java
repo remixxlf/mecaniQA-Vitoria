@@ -3,16 +3,27 @@ package services;
 import java.util.ArrayList;
 import java.util.List;
 
+import entidades.Carros;
+import entidades.ChaveOrdenacao;
+import entidades.Clientes;
+import entidades.EstiloCarro;
+import entidades.ItemCatalogo;
 import entidades.OS;
 import entidades.Pecas;
-import entidades.Servico;
-import entidades.StatusOs;
-import entidades.Carros;
-import entidades.Clientes;
 import entidades.Pedido;
+import entidades.Servico;
 import entidades.StatusOs;
 
 public class Gerenciador {
+
+	public static final String PASTA_DADOS = "dados";
+	public static final String ARQUIVO_PECAS = PASTA_DADOS + "/pecas.csv";
+	public static final String ARQUIVO_SERVICOS = PASTA_DADOS + "/servicos.csv";
+	public static final String ARQUIVO_CLIENTES = PASTA_DADOS + "/clientes.csv";
+	public static final String ARQUIVO_CARROS = PASTA_DADOS + "/carros.csv";
+	public static final String ARQUIVO_OS = PASTA_DADOS + "/ordens_servico.csv";
+	public static final String ARQUIVO_PEDIDOS = PASTA_DADOS + "/pedidos.csv";
+
 	static List<Pecas> pecas = new ArrayList<>();
 	static List<Servico> servicos = new ArrayList<>();
 	static FilaAtendimento filaAtendimento = new FilaAtendimento();
@@ -20,6 +31,29 @@ public class Gerenciador {
 	static List<OS> ordensServico = new ArrayList<>();
 	static List<Pedido> pedidos = new ArrayList<>();
 
+	public static List<Pecas> getPecas() {
+		return pecas;
+	}
+
+	public static List<Servico> getServicos() {
+		return servicos;
+	}
+
+	public static List<Clientes> getClientes() {
+		return clientes;
+	}
+
+	public static List<OS> getOrdensServico() {
+		return ordensServico;
+	}
+
+	public static List<Pedido> getPedidos() {
+		return pedidos;
+	}
+
+	public static FilaAtendimento getFilaAtendimento() {
+		return filaAtendimento;
+	}
 
 	public static void createPeca(int codNumerico, String nomePeca, String nomeFabricante, int quantidadePeca,
 			double precoVenda, double precoCusto) {
@@ -44,6 +78,15 @@ public class Gerenciador {
 		System.out.println("Peça com código " + codNumerico + " não encontrada.");
 	}
 
+	public static Pecas buscarPeca(int codNumerico) {
+		for (Pecas p : pecas) {
+			if (p.getCodNumerico() == codNumerico) {
+				return p;
+			}
+		}
+		return null;
+	}
+
 	public static void createServico(int codNumerico, String descricaoServico, int tempoEstimado, double valorMaoObra) {
 		if (descricaoServico == null || descricaoServico.isBlank()) {
 			System.out.println("Erro ao criar Serviço, descrição vazia");
@@ -64,6 +107,15 @@ public class Gerenciador {
 			}
 		}
 		System.out.println("Serviço com código " + codNumerico + " não encontrado.");
+	}
+
+	public static Servico buscarServico(int codNumerico) {
+		for (Servico s : servicos) {
+			if (s.getCodNumerico() == codNumerico) {
+				return s;
+			}
+		}
+		return null;
 	}
 
 	public static void readPecas() {
@@ -141,6 +193,96 @@ public class Gerenciador {
 		System.out.println("Serviço com código " + codigoBuscado + " não encontrado.");
 	}
 
+	public static Clientes createCliente(int codIdent, String nome, String telefoneZapZap, String email) {
+		if (nome == null || nome.isBlank()) {
+			System.out.println("Erro ao criar Cliente, nome vazio");
+			return null;
+		}
+		Clientes novoCliente = new Clientes(nome, email, telefoneZapZap, codIdent);
+		clientes.add(novoCliente);
+		System.out.println("Cliente " + nome + " cadastrado com sucesso!");
+		return novoCliente;
+	}
+
+	public static Clientes buscarCliente(int codIdent) {
+		for (Clientes c : clientes) {
+			if (c.getCodIdent() == codIdent) {
+				return c;
+			}
+		}
+		return null;
+	}
+
+	public static void deleteCliente(int codIdent) {
+		for (int i = 0; i < clientes.size(); i++) {
+			if (clientes.get(i).getCodIdent() == codIdent) {
+				clientes.remove(i);
+				System.out.println("Cliente removido com sucesso!");
+				return;
+			}
+		}
+		System.out.println("Cliente com código " + codIdent + " não encontrado.");
+	}
+
+	public static Carros createCarro(int codCliente, String modelo, String placa, String ano, EstiloCarro estilo) {
+		Clientes dono = buscarCliente(codCliente);
+		if (dono == null) {
+			System.out.println("Cliente com código " + codCliente + " não encontrado. Carro não cadastrado.");
+			return null;
+		}
+		Carros novoCarro = new Carros(modelo, placa, ano, estilo);
+		dono.adicionarCarro(novoCarro);
+		System.out.println("Carro " + modelo + " (" + placa + ") vinculado ao cliente " + dono.getNome() + ".");
+		return novoCarro;
+	}
+
+	public static void readClientes() {
+		if (clientes.isEmpty()) {
+			System.out.println("Nenhum cliente cadastrado.");
+			return;
+		}
+		for (Clientes c : clientes) {
+			System.out.println("Código: " + c.getCodIdent() + " | Nome: " + c.getNome() + " | WhatsApp: "
+					+ c.getTelefoneZapZap() + " | E-mail: " + c.getEmail());
+			if (c.getCarros().isEmpty()) {
+				System.out.println("   Nenhum carro associado.");
+			} else {
+				for (Carros carro : c.getCarros()) {
+					System.out.println("   Carro: " + carro.getModelo() + " | Placa: " + carro.getPlaca() + " | Ano: "
+							+ carro.getAno() + " | Estilo: " + carro.getEstilo());
+				}
+			}
+		}
+	}
+
+	public static OS abrirOS(Clientes cliente, Carros carro) {
+		OS novaOs = new OS(cliente, carro);
+		ordensServico.add(novaOs);
+		System.out.println("OS #" + novaOs.getNumeroOS() + " aberta com sucesso!");
+		return novaOs;
+	}
+
+	public static OS buscarOS(int numeroOS) {
+		for (OS os : ordensServico) {
+			if (os.getNumeroOS() == numeroOS) {
+				return os;
+			}
+		}
+		return null;
+	}
+
+	public static void mudarStatusOs(OS os, StatusOs novoStatus) {
+		if (os == null) {
+			System.out.println("OS inexistente.");
+			return;
+		}
+		os.setStatus(novoStatus);
+		System.out.println("OS #" + os.getNumeroOS() + " agora esta " + novoStatus);
+		if (novoStatus == StatusOs.AGUARDANDO_EXECUCAO) {
+			despacharOs(os);
+		}
+	}
+
 	public static void despacharOs(OS os) {
 		if (os.getStatus() == StatusOs.AGUARDANDO_EXECUCAO) {
 			for (Servico s : os.getServicos()) {
@@ -151,25 +293,14 @@ public class Gerenciador {
 			System.out.println("A OS #" + os.getNumeroOS() + " ainda nao esta aguardando execucao. Servicos retidos.");
 		}
 	}
-	public static OS abrirOS(Clientes cliente, Carros carro) {
-		OS novaOs = new OS(cliente, carro);
-		ordensServico.add(novaOs);
-		System.out.println("OS #" + novaOs.getNumeroOS() + " aberta com sucesso!");
-		return novaOs;
-	}
-
-	public static void mudarStatusOs(OS os, StatusOs novoStatus) {
-		os.setStatus(novoStatus);
-		System.out.println("OS #" + os.getNumeroOS() + " agora esta " + novoStatus);
-		if (novoStatus == StatusOs.AGUARDANDO_EXECUCAO) {
-			despacharOs(os);
-		}
-	}
 
 	public static Servico atenderProximoServico() {
-		return filaAtendimento.desenfileirar();
+		Servico atendido = filaAtendimento.desenfileirar();
+		if (atendido != null) {
+			System.out.println("Servico em execucao: " + atendido.getDescricaoServico());
+		}
+		return atendido;
 	}
-
 
 	public static Pedido abrirPedido() {
 		Pedido novoPedido = new Pedido();
@@ -178,7 +309,44 @@ public class Gerenciador {
 		return novoPedido;
 	}
 
-	public static Servico atenderProximoServico() {
-		return filaAtendimento.desenfileirar();
+	public static Pedido buscarPedido(int codigoPedido) {
+		for (Pedido p : pedidos) {
+			if (p.getCodigoPedido() == codigoPedido) {
+				return p;
+			}
+		}
+		return null;
+	}
+
+	public static List<ItemCatalogo> montarCatalogo() {
+		List<ItemCatalogo> catalogo = new ArrayList<>();
+		catalogo.addAll(pecas);
+		catalogo.addAll(servicos);
+		return catalogo;
+	}
+
+	public static void relatorioCatalogoOrdenado(ChaveOrdenacao chave) {
+		OrdenacaoService.imprimirRelatorio(montarCatalogo(), chave);
+	}
+
+	public static void salvarTudo() {
+		PersistenciaService.exportarPecas(pecas, ARQUIVO_PECAS);
+		PersistenciaService.exportarServicos(servicos, ARQUIVO_SERVICOS);
+		PersistenciaService.exportarClientes(clientes, ARQUIVO_CLIENTES);
+		PersistenciaService.exportarCarros(clientes, ARQUIVO_CARROS);
+		PersistenciaService.exportarOS(ordensServico, ARQUIVO_OS);
+		PersistenciaService.exportarPedidos(pedidos, ARQUIVO_PEDIDOS);
+		System.out.println("Todos os dados foram salvos em arquivos .csv na pasta " + PASTA_DADOS + ".");
+	}
+
+	public static void carregarTudo() {
+		pecas = PersistenciaService.importarPecas(ARQUIVO_PECAS);
+		servicos = PersistenciaService.importarServicos(ARQUIVO_SERVICOS);
+		clientes = PersistenciaService.importarClientes(ARQUIVO_CLIENTES);
+		PersistenciaService.importarCarros(ARQUIVO_CARROS, clientes);
+		ordensServico = PersistenciaService.importarOS(ARQUIVO_OS, clientes, servicos);
+		pedidos = PersistenciaService.importarPedidos(ARQUIVO_PEDIDOS, pecas);
+		System.out.println("Dados recuperados: " + pecas.size() + " peca(s), " + servicos.size() + " servico(s), "
+				+ clientes.size() + " cliente(s), " + ordensServico.size() + " OS e " + pedidos.size() + " pedido(s).");
 	}
 }

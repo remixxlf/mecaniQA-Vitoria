@@ -1,5 +1,7 @@
 package entidades;
-public class ItemCatalogo {
-    String getNomeParaOrdenacao();
-    int getCodigoParaOrdenacao90();
+
+public interface ItemCatalogo {
+	String getNomeParaOrdenacao();
+
+	int getCodigoParaOrdenacao();
 }

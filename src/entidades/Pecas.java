@@ -2,7 +2,6 @@ package entidades;
 
 public class Pecas implements ItemCatalogo {
 
-
 	int codNumerico;
 	String nomePeca;
 	String nomeFabricante;
@@ -70,17 +69,23 @@ public class Pecas implements ItemCatalogo {
 	}
 
 	@Override
-	public String getNomeParaOrdenação() {
+	public String getNomeParaOrdenacao() {
+		return nomePeca;
+	}
+
+	@Override
+	public int getCodigoParaOrdenacao() {
 		return codNumerico;
 	}
-	public String toCSV() {
-		return codNumerico+ ";"+ nomePeca+";"+nomeFabricante+";"+quantidadePeca+";"+precoVenda+";"+precoCusto;
-	}
-	public static Peccas fromCsv(String Linha){
-		String[] linha = Linha.split(";");
-		return new Pecas(Integer.parseInt(c[0]),c[1],c[2], Integer.parseInt(c[3])),
-		Double.ParseDouble(c[4]), Double.parseDouble(c[5]));
+
+	public String toCsv() {
+		return codNumerico + ";" + nomePeca + ";" + nomeFabricante + ";" + quantidadePeca + ";" + precoVenda + ";"
+				+ precoCusto;
 	}
 
-
+	public static Pecas fromCsv(String linha) {
+		String[] c = linha.split(";");
+		return new Pecas(Integer.parseInt(c[0]), c[1], c[2], Integer.parseInt(c[3]), Double.parseDouble(c[4]),
+				Double.parseDouble(c[5]));
+	}
 }

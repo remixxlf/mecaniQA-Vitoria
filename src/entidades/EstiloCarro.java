@@ -1,8 +1,7 @@
 package entidades;
 
 public enum EstiloCarro {
-	SEDAN,
 	HATCH,
+	SEDAN,
 	SUV
-
 }

@@ -1,9 +1,8 @@
 package entidades;
 
 public enum StatusOs {
-	Criada,
-	Aprovada,
-	EmAndamento,
-	Concluida,
-	Cancelada
+	EM_ABERTO,
+	AGUARDANDO_EXECUCAO,
+	EM_EXECUCAO,
+	FINALIZADA
 }

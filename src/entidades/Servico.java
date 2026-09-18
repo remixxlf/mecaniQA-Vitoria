@@ -48,19 +48,21 @@ public class Servico implements ItemCatalogo {
 	}
 
 	@Override
-	public String getNomeParaOrdenacao(){
+	public String getNomeParaOrdenacao() {
 		return descricaoServico;
 	}
+
 	@Override
-	public int getCodigoParaOrdenacao(){
+	public int getCodigoParaOrdenacao() {
 		return codNumerico;
 	}
-	public String toCsv(){
-		return codNumerico+";"+descricaoServico+";"+tempoEstimado+";"+valorMaoObra;
-	}
-	public static Servico from Csv(String linha){
-		String[] c-linha.split(";");
-		return new Servico(Integer.parseInt(c[0]), c[1], Integer.parseInt(c[2]), Double.parseDouble(c[3]));
+
+	public String toCsv() {
+		return codNumerico + ";" + descricaoServico + ";" + tempoEstimado + ";" + valorMaoObra;
 	}
 
+	public static Servico fromCsv(String linha) {
+		String[] c = linha.split(";");
+		return new Servico(Integer.parseInt(c[0]), c[1], Integer.parseInt(c[2]), Double.parseDouble(c[3]));
+	}
 }
