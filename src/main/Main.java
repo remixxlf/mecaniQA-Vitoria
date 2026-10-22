@@ -67,7 +67,7 @@ public class Main {
 		System.out.println("Tentando adicionar peca apos finalizar o pedido:");
 		pedido.adicionarItem(Gerenciador.buscarPeca(3), 1);
 
-		System.out.println("\n=== 6. MOTOR DE ORDENACAO (BUBBLE SORT + ENUM DE CHAVE) ===");
+		System.out.println("\n=== 6. MOTOR DE ORDENACAO (NOME VIA BUBBLE SORT / ID VIA ARVORE AVL) ===");
 		Gerenciador.relatorioCatalogoOrdenado(ChaveOrdenacao.NOME);
 		Gerenciador.relatorioCatalogoOrdenado(ChaveOrdenacao.CODIGO_IDENTIFICADOR);
 
@@ -82,5 +82,14 @@ public class Main {
 		for (Pedido pedidoLido : Gerenciador.getPedidos()) {
 			pedidoLido.imprimirRelatorio();
 		}
+
+		System.out.println("\n=== 8. RELATORIOS EM-ORDEM VIA ARVORE AVL (OAT 3) ===");
+		Gerenciador.relatorioClientesEmOrdem();
+		Gerenciador.relatorioPecasEmOrdem();
+		Gerenciador.relatorioServicosEmOrdem();
+		System.out.println("\nTopologia da Arvore AVL de Clientes:");
+		Gerenciador.getIndiceClientes().exibirEstrutura();
+		System.out.println("\nTopologia da Arvore AVL de Pecas:");
+		Gerenciador.getIndicePecas().exibirEstrutura();
 	}
 }

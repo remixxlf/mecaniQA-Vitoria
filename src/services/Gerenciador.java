@@ -135,14 +135,15 @@ public class Gerenciador {
 	}
 
 	public static void readPecas() {
-		if (pecas.isEmpty()) {
+		if (indicePecas.estaVazia()) {
 			System.out.println("Nenhuma peça cadastrada.");
 			return;
 		}
-		for (int i = 0; i < pecas.size(); i++) {
-			System.out.println("Código: " + pecas.get(i).getCodNumerico() + " | Nome: " + pecas.get(i).getNomePeca()
-					+ " | Fabricante: " + pecas.get(i).getNomeFabricante() + " | Quantidade: "
-					+ pecas.get(i).getQuantidadePeca());
+		for (Object obj : indicePecas.obterEmOrdem()) {
+			Pecas p = (Pecas) obj;
+			System.out.println("Código: " + p.getCodNumerico() + " | Nome: " + p.getNomePeca()
+					+ " | Fabricante: " + p.getNomeFabricante() + " | Quantidade: "
+					+ p.getQuantidadePeca());
 		}
 	}
 
@@ -173,14 +174,15 @@ public class Gerenciador {
 	}
 
 	public static void readServicos() {
-		if (servicos.isEmpty()) {
+		if (indiceServicos.estaVazia()) {
 			System.out.println("Nenhum serviço cadastrado.");
 			return;
 		}
-		for (int i = 0; i < servicos.size(); i++) {
-			System.out.println("Código: " + servicos.get(i).getCodNumerico() + " | Descrição: "
-					+ servicos.get(i).getDescricaoServico() + " | Tempo Estimado: " + servicos.get(i).getTempoEstimado()
-					+ " min" + " | Valor Mão de Obra: R$ " + servicos.get(i).getValorMaoObra());
+		for (Object obj : indiceServicos.obterEmOrdem()) {
+			Servico s = (Servico) obj;
+			System.out.println("Código: " + s.getCodNumerico() + " | Descrição: "
+					+ s.getDescricaoServico() + " | Tempo Estimado: " + s.getTempoEstimado()
+					+ " min" + " | Valor Mão de Obra: R$ " + s.getValorMaoObra());
 		}
 	}
 
@@ -250,11 +252,12 @@ public class Gerenciador {
 	}
 
 	public static void readClientes() {
-		if (clientes.isEmpty()) {
+		if (indiceClientes.estaVazia()) {
 			System.out.println("Nenhum cliente cadastrado.");
 			return;
 		}
-		for (Clientes c : clientes) {
+		for (Object obj : indiceClientes.obterEmOrdem()) {
+			Clientes c = (Clientes) obj;
 			System.out.println("Código: " + c.getCodIdent() + " | Nome: " + c.getNome() + " | WhatsApp: "
 					+ c.getTelefoneZapZap() + " | E-mail: " + c.getEmail());
 			if (c.getCarros().isEmpty()) {
@@ -335,8 +338,98 @@ public class Gerenciador {
 		return catalogo;
 	}
 
+	public static void relatorioClientesEmOrdem() {
+		System.out.println("---- Relatorio de Clientes (Ordenado via Arvore AVL - Em-Ordem) ----");
+		List<Object> ordenados = indiceClientes.obterEmOrdem();
+		if (ordenados.isEmpty()) {
+			System.out.println("Nenhum cliente cadastrado.");
+			return;
+		}
+		System.out.printf("%-8s | %-25s | %-16s | %-25s%n", "Codigo", "Nome", "WhatsApp", "E-mail");
+		for (Object obj : ordenados) {
+			Clientes c = (Clientes) obj;
+			System.out.printf("%-8d | %-25s | %-16s | %-25s%n", c.getCodIdent(), c.getNome(),
+					c.getTelefoneZapZap(), c.getEmail());
+			for (Carros carro : c.getCarros()) {
+				System.out.println("   Carro: " + carro.getModelo() + " | Placa: " + carro.getPlaca()
+						+ " | Ano: " + carro.getAno() + " | Estilo: " + carro.getEstilo());
+			}
+		}
+	}
+
+	public static void relatorioPecasEmOrdem() {
+		System.out.println("---- Catalogo de Pecas (Ordenado via Arvore AVL - Em-Ordem) ----");
+		List<Object> ordenados = indicePecas.obterEmOrdem();
+		if (ordenados.isEmpty()) {
+			System.out.println("Nenhuma peca cadastrada.");
+			return;
+		}
+		System.out.printf("%-8s | %-25s | %-15s | %-6s | %-12s | %-12s%n", "Codigo", "Nome", "Fabricante", "Qtd",
+				"Preco Venda", "Preco Custo");
+		for (Object obj : ordenados) {
+			Pecas p = (Pecas) obj;
+			System.out.printf("%-8d | %-25s | %-15s | %-6d | R$ %-9.2f | R$ %-9.2f%n", p.getCodNumerico(),
+					p.getNomePeca(), p.getNomeFabricante(), p.getQuantidadePeca(), p.getPrecoVenda(),
+					p.getPrecoCusto());
+		}
+	}
+
+	public static void relatorioServicosEmOrdem() {
+		System.out.println("---- Catalogo de Servicos (Ordenado via Arvore AVL - Em-Ordem) ----");
+		List<Object> ordenados = indiceServicos.obterEmOrdem();
+		if (ordenados.isEmpty()) {
+			System.out.println("Nenhum servico cadastrado.");
+			return;
+		}
+		System.out.printf("%-8s | %-30s | %-12s | %-12s%n", "Codigo", "Descricao", "Tempo Estimado", "Valor M.O.");
+		for (Object obj : ordenados) {
+			Servico s = (Servico) obj;
+			System.out.printf("%-8d | %-30s | %-12s | R$ %-9.2f%n", s.getCodNumerico(), s.getDescricaoServico(),
+					s.getTempoEstimado() + " min", s.getValorMaoObra());
+		}
+	}
+
+	public static void relatorioCatalogoEmOrdem() {
+		System.out.println("---- Catalogo (Pecas e Servicos) ordenado por CODIGO_IDENTIFICADOR ----");
+		List<Object> pecasOrdenadas = indicePecas.obterEmOrdem();
+		List<Object> servicosOrdenados = indiceServicos.obterEmOrdem();
+		if (pecasOrdenadas.isEmpty() && servicosOrdenados.isEmpty()) {
+			System.out.println("Nenhum item cadastrado.");
+			return;
+		}
+		System.out.printf("%-8s | %-40s%n", "Codigo", "Nome");
+		int i = 0, j = 0;
+		while (i < pecasOrdenadas.size() && j < servicosOrdenados.size()) {
+			Pecas p = (Pecas) pecasOrdenadas.get(i);
+			Servico s = (Servico) servicosOrdenados.get(j);
+			if (p.getCodigoParaOrdenacao() <= s.getCodigoParaOrdenacao()) {
+				System.out.printf("%-8d | %-40s%n", p.getCodigoParaOrdenacao(), p.getNomeParaOrdenacao());
+				i++;
+			} else {
+				System.out.printf("%-8d | %-40s%n", s.getCodigoParaOrdenacao(), s.getNomeParaOrdenacao());
+				j++;
+			}
+		}
+		while (i < pecasOrdenadas.size()) {
+			Pecas p = (Pecas) pecasOrdenadas.get(i);
+			System.out.printf("%-8d | %-40s%n", p.getCodigoParaOrdenacao(), p.getNomeParaOrdenacao());
+			i++;
+		}
+		while (j < servicosOrdenados.size()) {
+			Servico s = (Servico) servicosOrdenados.get(j);
+			System.out.printf("%-8d | %-40s%n", s.getCodigoParaOrdenacao(), s.getNomeParaOrdenacao());
+			j++;
+		}
+	}
+
 	public static void relatorioCatalogoOrdenado(ChaveOrdenacao chave) {
-		OrdenacaoService.imprimirRelatorio(montarCatalogo(), chave);
+		if (chave == ChaveOrdenacao.CODIGO_IDENTIFICADOR) {
+			// OAT 3: Substituição do Bubble Sort por percurso Em-Ordem na Árvore AVL em tempo linear O(n)
+			relatorioCatalogoEmOrdem();
+		} else {
+			// Ordenação alfabética por NOME via Bubble Sort
+			OrdenacaoService.imprimirRelatorio(montarCatalogo(), chave);
+		}
 	}
 
 	public static void salvarTudo() {
