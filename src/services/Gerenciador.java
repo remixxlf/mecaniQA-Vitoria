@@ -31,6 +31,12 @@ public class Gerenciador {
 	static List<OS> ordensServico = new ArrayList<>();
 	static List<Pedido> pedidos = new ArrayList<>();
 
+	// Índices AVL para busca otimizada O(log n) — OAT 3
+	static ArvoreAVL indicePecas = new ArvoreAVL();
+	static ArvoreAVL indiceServicos = new ArvoreAVL();
+	static ArvoreAVL indiceClientes = new ArvoreAVL();
+	static ArvoreAVL indiceOS = new ArvoreAVL();
+
 	public static List<Pecas> getPecas() {
 		return pecas;
 	}
@@ -64,6 +70,7 @@ public class Gerenciador {
 
 		Pecas novaPeca = new Pecas(codNumerico, nomePeca, nomeFabricante, quantidadePeca, precoVenda, precoCusto);
 		pecas.add(novaPeca);
+		indicePecas.inserir(novaPeca.getCodNumerico(), novaPeca); // indexa na árvore AVL
 		System.out.println("Peça criada com sucesso!");
 	}
 
@@ -95,6 +102,7 @@ public class Gerenciador {
 
 		Servico novaServico = new Servico(codNumerico, descricaoServico, tempoEstimado, valorMaoObra);
 		servicos.add(novaServico);
+		indiceServicos.inserir(novaServico.getCodNumerico(), novaServico); // indexa na árvore AVL
 		System.out.println("Serviço criado e salvo com sucesso!");
 	}
 
@@ -200,6 +208,7 @@ public class Gerenciador {
 		}
 		Clientes novoCliente = new Clientes(nome, email, telefoneZapZap, codIdent);
 		clientes.add(novoCliente);
+		indiceClientes.inserir(novoCliente.getCodIdent(), novoCliente); // indexa na árvore AVL
 		System.out.println("Cliente " + nome + " cadastrado com sucesso!");
 		return novoCliente;
 	}
@@ -258,6 +267,7 @@ public class Gerenciador {
 	public static OS abrirOS(Clientes cliente, Carros carro) {
 		OS novaOs = new OS(cliente, carro);
 		ordensServico.add(novaOs);
+		indiceOS.inserir(novaOs.getNumeroOS(), novaOs); // indexa na árvore AVL
 		System.out.println("OS #" + novaOs.getNumeroOS() + " aberta com sucesso!");
 		return novaOs;
 	}
@@ -346,7 +356,32 @@ public class Gerenciador {
 		PersistenciaService.importarCarros(ARQUIVO_CARROS, clientes);
 		ordensServico = PersistenciaService.importarOS(ARQUIVO_OS, clientes, servicos);
 		pedidos = PersistenciaService.importarPedidos(ARQUIVO_PEDIDOS, pecas);
+
+		// Sincroniza os índices AVL com os dados recém-carregados do disco — OAT 3
+		indicePecas.limpar();
+		for (Pecas p : pecas) {
+			indicePecas.inserir(p.getCodNumerico(), p);
+		}
+
+		indiceServicos.limpar();
+		for (Servico s : servicos) {
+			indiceServicos.inserir(s.getCodNumerico(), s);
+		}
+
+		indiceClientes.limpar();
+		for (Clientes c : clientes) {
+			indiceClientes.inserir(c.getCodIdent(), c);
+		}
+
+		indiceOS.limpar();
+		for (OS os : ordensServico) {
+			indiceOS.inserir(os.getNumeroOS(), os);
+		}
+
 		System.out.println("Dados recuperados: " + pecas.size() + " peca(s), " + servicos.size() + " servico(s), "
 				+ clientes.size() + " cliente(s), " + ordensServico.size() + " OS e " + pedidos.size() + " pedido(s).");
+		System.out.println("Indices AVL recarregados: " + indicePecas.getQuantidade() + " peca(s), "
+				+ indiceServicos.getQuantidade() + " servico(s), " + indiceClientes.getQuantidade()
+				+ " cliente(s), " + indiceOS.getQuantidade() + " OS.");
 	}
 }
