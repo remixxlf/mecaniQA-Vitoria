@@ -61,6 +61,22 @@ public class Gerenciador {
 		return filaAtendimento;
 	}
 
+	public static ArvoreAVL getIndicePecas() {
+		return indicePecas;
+	}
+
+	public static ArvoreAVL getIndiceServicos() {
+		return indiceServicos;
+	}
+
+	public static ArvoreAVL getIndiceClientes() {
+		return indiceClientes;
+	}
+
+	public static ArvoreAVL getIndiceOS() {
+		return indiceOS;
+	}
+
 	public static void createPeca(int codNumerico, String nomePeca, String nomeFabricante, int quantidadePeca,
 			double precoVenda, double precoCusto) {
 		if (nomePeca == null || nomePeca.isBlank()) {
@@ -86,12 +102,8 @@ public class Gerenciador {
 	}
 
 	public static Pecas buscarPeca(int codNumerico) {
-		for (Pecas p : pecas) {
-			if (p.getCodNumerico() == codNumerico) {
-				return p;
-			}
-		}
-		return null;
+		// OAT 3: busca O(log n) via índice AVL — substitui o laço for O(n)
+		return (Pecas) indicePecas.buscar(codNumerico);
 	}
 
 	public static void createServico(int codNumerico, String descricaoServico, int tempoEstimado, double valorMaoObra) {
@@ -118,12 +130,8 @@ public class Gerenciador {
 	}
 
 	public static Servico buscarServico(int codNumerico) {
-		for (Servico s : servicos) {
-			if (s.getCodNumerico() == codNumerico) {
-				return s;
-			}
-		}
-		return null;
+		// OAT 3: busca O(log n) via índice AVL — substitui o laço for O(n)
+		return (Servico) indiceServicos.buscar(codNumerico);
 	}
 
 	public static void readPecas() {
@@ -214,12 +222,8 @@ public class Gerenciador {
 	}
 
 	public static Clientes buscarCliente(int codIdent) {
-		for (Clientes c : clientes) {
-			if (c.getCodIdent() == codIdent) {
-				return c;
-			}
-		}
-		return null;
+		// OAT 3: busca O(log n) via índice AVL — substitui o laço for O(n)
+		return (Clientes) indiceClientes.buscar(codIdent);
 	}
 
 	public static void deleteCliente(int codIdent) {
@@ -273,12 +277,8 @@ public class Gerenciador {
 	}
 
 	public static OS buscarOS(int numeroOS) {
-		for (OS os : ordensServico) {
-			if (os.getNumeroOS() == numeroOS) {
-				return os;
-			}
-		}
-		return null;
+		// OAT 3: busca O(log n) via índice AVL — substitui o laço for O(n)
+		return (OS) indiceOS.buscar(numeroOS);
 	}
 
 	public static void mudarStatusOs(OS os, StatusOs novoStatus) {
