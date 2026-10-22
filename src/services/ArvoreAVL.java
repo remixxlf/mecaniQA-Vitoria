@@ -36,6 +36,10 @@ public class ArvoreAVL {
 		return (no == null) ? 0 : no.altura;
 	}
 
+	public int calcularAltura(No no) {
+		return altura(no);
+	}
+
 	
 	public int getAltura() {
 		return altura(this.raiz);
@@ -47,6 +51,10 @@ public class ArvoreAVL {
 			return 0;
 		}
 		return altura(no.esquerda) - altura(no.direita);
+	}
+
+	public int fatorBalanceamento(No no) {
+		return getFatorBalanceamento(no);
 	}
 
 	
@@ -179,6 +187,14 @@ public class ArvoreAVL {
 			return;
 		}
 		imprimirEmOrdemRecursivo(this.raiz);
+	}
+
+	public void exibirEmOrdem(No no) {
+		if (no != null) {
+			exibirEmOrdem(no.esquerda);
+			System.out.println("ID: " + no.id + " | Registro: " + no.registro);
+			exibirEmOrdem(no.direita);
+		}
 	}
 
 	private void imprimirEmOrdemRecursivo(No no) {
