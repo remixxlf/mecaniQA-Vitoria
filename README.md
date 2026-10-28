@@ -16,7 +16,6 @@ Neste primeiro desafio, você e sua equipe implementarão um MVP na linguagem de
 
 * Brendha Maria Costa Seixas 
 * Matheus da Costa Pereira
-* Guilherme Pereira Barreto 
 * Victor Paulo Teixeira da Silva e Silva 
 * Luis Filipe Silva Lima
 * AGSON ASAFE
