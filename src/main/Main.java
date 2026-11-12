@@ -1,5 +1,7 @@
 package main;
 
+import java.io.IOException;
+
 import entidades.Carros;
 import entidades.ChaveOrdenacao;
 import entidades.Clientes;
@@ -9,9 +11,19 @@ import entidades.Pedido;
 import entidades.Servico;
 import entidades.StatusOs;
 import services.Gerenciador;
+import services.RoteamentoService;
 
 public class Main {
 	public static void main(String[] args) {
+
+		RoteamentoService roteamento = new RoteamentoService();
+		try {
+			roteamento.carregar(RoteamentoService.ARQUIVO_ROTAS);
+			System.out.println("Malha logistica carregada: " + roteamento.getGrafo().quantidadeVertices()
+					+ " ponto(s) e " + roteamento.getGrafo().quantidadeArestas() + " via(s).\n");
+		} catch (IOException e) {
+			System.out.println("Falha ao carregar a malha logistica: " + e.getMessage() + "\n");
+		}
 
 		System.out.println("=== 1. CADASTRO DE PECAS E SERVICOS ===");
 		Gerenciador.createPeca(1, "Filtro de Oleo", "Bosch", 100, 45.50, 20.00);
@@ -91,5 +103,8 @@ public class Main {
 		Gerenciador.getIndiceClientes().exibirEstrutura();
 		System.out.println("\nTopologia da Arvore AVL de Pecas:");
 		Gerenciador.getIndicePecas().exibirEstrutura();
+
+		System.out.println("\n=== 9. LOGISTICA DE ENTREGA (GRAFO + DIJKSTRA - OAT 4) ===");
+		new MenuLogistica(roteamento).executar();
 	}
 }

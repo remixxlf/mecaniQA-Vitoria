@@ -1,0 +1,10 @@
+Centro_Distribuicao;Filial_Barauna;12
+Filial_Barauna;Filial_Tomba;8
+Centro_Distribuicao;Filial_Tomba;15
+Filial_Tomba;Filial_Santa_Monica;6
+Filial_Barauna;Filial_Cidade_Nova;9
+Filial_Cidade_Nova;Filial_Santa_Monica;5
+Centro_Distribuicao;Filial_Sobradinho;40
+Filial_Santa_Monica;Filial_Sobradinho;14
+Filial_Cidade_Nova;Filial_Kalilandia;7
+Filial_Kalilandia;Filial_Sobradinho;10

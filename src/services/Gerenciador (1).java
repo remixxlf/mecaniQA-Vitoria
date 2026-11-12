@@ -1,0 +1,478 @@
+package services;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import entidades.Carros;
+import entidades.ChaveOrdenacao;
+import entidades.Clientes;
+import entidades.EstiloCarro;
+import entidades.ItemCatalogo;
+import entidades.OS;
+import entidades.Pecas;
+import entidades.Pedido;
+import entidades.Servico;
+import entidades.StatusOs;
+
+public class Gerenciador {
+
+	public static final String PASTA_DADOS = "dados";
+	public static final String ARQUIVO_PECAS = PASTA_DADOS + "/pecas.csv";
+	public static final String ARQUIVO_SERVICOS = PASTA_DADOS + "/servicos.csv";
+	public static final String ARQUIVO_CLIENTES = PASTA_DADOS + "/clientes.csv";
+	public static final String ARQUIVO_CARROS = PASTA_DADOS + "/carros.csv";
+	public static final String ARQUIVO_OS = PASTA_DADOS + "/ordens_servico.csv";
+	public static final String ARQUIVO_PEDIDOS = PASTA_DADOS + "/pedidos.csv";
+
+	static List<Pecas> pecas = new ArrayList<>();
+	static List<Servico> servicos = new ArrayList<>();
+	static FilaAtendimento filaAtendimento = new FilaAtendimento();
+	static List<Clientes> clientes = new ArrayList<>();
+	static List<OS> ordensServico = new ArrayList<>();
+	static List<Pedido> pedidos = new ArrayList<>();
+
+	static ArvoreAVL indicePecas = new ArvoreAVL();
+	static ArvoreAVL indiceServicos = new ArvoreAVL();
+	static ArvoreAVL indiceClientes = new ArvoreAVL();
+	static ArvoreAVL indiceOS = new ArvoreAVL();
+	static ArvoreAVL indicePedidos = new ArvoreAVL();
+
+	public static List<Pecas> getPecas() {
+		return pecas;
+	}
+
+	public static List<Servico> getServicos() {
+		return servicos;
+	}
+
+	public static List<Clientes> getClientes() {
+		return clientes;
+	}
+
+	public static List<OS> getOrdensServico() {
+		return ordensServico;
+	}
+
+	public static List<Pedido> getPedidos() {
+		return pedidos;
+	}
+
+	public static FilaAtendimento getFilaAtendimento() {
+		return filaAtendimento;
+	}
+
+	public static ArvoreAVL getIndicePecas() {
+		return indicePecas;
+	}
+
+	public static ArvoreAVL getIndiceServicos() {
+		return indiceServicos;
+	}
+
+	public static ArvoreAVL getIndiceClientes() {
+		return indiceClientes;
+	}
+
+	public static ArvoreAVL getIndiceOS() {
+		return indiceOS;
+	}
+
+	public static ArvoreAVL getIndicePedidos() {
+		return indicePedidos;
+	}
+
+	public static void createPeca(int codNumerico, String nomePeca, String nomeFabricante, int quantidadePeca,
+			double precoVenda, double precoCusto) {
+		if (nomePeca == null || nomePeca.isBlank()) {
+			System.out.println("Erro ao criar Peça, nome vazio");
+			return;
+		}
+
+		Pecas novaPeca = new Pecas(codNumerico, nomePeca, nomeFabricante, quantidadePeca, precoVenda, precoCusto);
+		pecas.add(novaPeca);
+		indicePecas.inserir(novaPeca.getCodNumerico(), novaPeca);
+		System.out.println("Peça criada com sucesso!");
+	}
+
+	public static void deletePeca(int codNumerico) {
+		for (int i = 0; i < pecas.size(); i++) {
+			if (pecas.get(i).getCodNumerico() == codNumerico) {
+				pecas.remove(i);
+				System.out.println("Peça removida com sucesso!");
+				return;
+			}
+		}
+		System.out.println("Peça com código " + codNumerico + " não encontrada.");
+	}
+
+	public static Pecas buscarPeca(int codNumerico) {
+		return (Pecas) indicePecas.buscar(codNumerico);
+	}
+
+	public static void createServico(int codNumerico, String descricaoServico, int tempoEstimado, double valorMaoObra) {
+		if (descricaoServico == null || descricaoServico.isBlank()) {
+			System.out.println("Erro ao criar Serviço, descrição vazia");
+			return;
+		}
+
+		Servico novaServico = new Servico(codNumerico, descricaoServico, tempoEstimado, valorMaoObra);
+		servicos.add(novaServico);
+		indiceServicos.inserir(novaServico.getCodNumerico(), novaServico);
+		System.out.println("Serviço criado e salvo com sucesso!");
+	}
+
+	public static void deleteServico(int codNumerico) {
+		for (int i = 0; i < servicos.size(); i++) {
+			if (servicos.get(i).getCodNumerico() == codNumerico) {
+				servicos.remove(i);
+				System.out.println("Serviço removido com sucesso!");
+				return;
+			}
+		}
+		System.out.println("Serviço com código " + codNumerico + " não encontrado.");
+	}
+
+	public static Servico buscarServico(int codNumerico) {
+		return (Servico) indiceServicos.buscar(codNumerico);
+	}
+
+	public static void readPecas() {
+		if (indicePecas.estaVazia()) {
+			System.out.println("Nenhuma peça cadastrada.");
+			return;
+		}
+		for (Object obj : indicePecas.obterEmOrdem()) {
+			Pecas p = (Pecas) obj;
+			System.out.println("Código: " + p.getCodNumerico() + " | Nome: " + p.getNomePeca()
+					+ " | Fabricante: " + p.getNomeFabricante() + " | Quantidade: "
+					+ p.getQuantidadePeca());
+		}
+	}
+
+	public static void updatePeca(int codigoAlvo, String novoNomePeca, String novoNomeFabricante,
+			int novaQuantidadePeca, double novoPrecoVenda, double novoPrecoCusto) {
+		for (int i = 0; i < pecas.size(); i++) {
+			if (pecas.get(i).getCodNumerico() == codigoAlvo) {
+				pecas.get(i).setNomePeca(novoNomePeca);
+				pecas.get(i).setNomeFabricante(novoNomeFabricante);
+				pecas.get(i).setQuantidadePeca(novaQuantidadePeca);
+				pecas.get(i).setPrecoVenda(novoPrecoVenda);
+				pecas.get(i).setPrecoCusto(novoPrecoCusto);
+				System.out.println("Peça atualizada com sucesso!");
+				return;
+			}
+		}
+		System.out.println("Peça com código " + codigoAlvo + " não encontrada para atualização.");
+	}
+
+	public static void buscaLinearPeca(int codigoBuscado) {
+		for (int i = 0; i < pecas.size(); i++) {
+			if (pecas.get(i).getCodNumerico() == codigoBuscado) {
+				System.out.println("PecaIndex = " + i + "\n " + "Codigo da peca: " + pecas.get(i).getCodNumerico());
+				return;
+			}
+		}
+		System.out.println("Peça com código " + codigoBuscado + " não encontrada.");
+	}
+
+	public static void readServicos() {
+		if (indiceServicos.estaVazia()) {
+			System.out.println("Nenhum serviço cadastrado.");
+			return;
+		}
+		for (Object obj : indiceServicos.obterEmOrdem()) {
+			Servico s = (Servico) obj;
+			System.out.println("Código: " + s.getCodNumerico() + " | Descrição: "
+					+ s.getDescricaoServico() + " | Tempo Estimado: " + s.getTempoEstimado()
+					+ " min" + " | Valor Mão de Obra: R$ " + s.getValorMaoObra());
+		}
+	}
+
+	public static void updateServico(int codigoAlvo, String novaDescricao, int novoTempoEstimado,
+			double novoValorMaoObra) {
+		for (int i = 0; i < servicos.size(); i++) {
+			if (servicos.get(i).getCodNumerico() == codigoAlvo) {
+				servicos.get(i).setDescricaoServico(novaDescricao);
+				servicos.get(i).setTempoEstimado(novoTempoEstimado);
+				servicos.get(i).setValorMaoObra(novoValorMaoObra);
+				System.out.println("Serviço atualizado com sucesso!");
+				return;
+			}
+		}
+		System.out.println("Serviço com código " + codigoAlvo + " não encontrado para atualização.");
+	}
+
+	public static void buscaLinearServico(int codigoBuscado) {
+		for (int i = 0; i < servicos.size(); i++) {
+			if (servicos.get(i).getCodNumerico() == codigoBuscado) {
+				System.out.println(
+						"ServicoIndex = " + i + "\n " + "Codigo do servico: " + servicos.get(i).getCodNumerico());
+				return;
+			}
+		}
+		System.out.println("Serviço com código " + codigoBuscado + " não encontrado.");
+	}
+
+	public static Clientes createCliente(int codIdent, String nome, String telefoneZapZap, String email) {
+		if (nome == null || nome.isBlank()) {
+			System.out.println("Erro ao criar Cliente, nome vazio");
+			return null;
+		}
+		Clientes novoCliente = new Clientes(nome, email, telefoneZapZap, codIdent);
+		clientes.add(novoCliente);
+		indiceClientes.inserir(novoCliente.getCodIdent(), novoCliente);
+		System.out.println("Cliente " + nome + " cadastrado com sucesso!");
+		return novoCliente;
+	}
+
+	public static Clientes buscarCliente(int codIdent) {
+		return (Clientes) indiceClientes.buscar(codIdent);
+	}
+
+	public static void deleteCliente(int codIdent) {
+		for (int i = 0; i < clientes.size(); i++) {
+			if (clientes.get(i).getCodIdent() == codIdent) {
+				clientes.remove(i);
+				System.out.println("Cliente removido com sucesso!");
+				return;
+			}
+		}
+		System.out.println("Cliente com código " + codIdent + " não encontrado.");
+	}
+
+	public static Carros createCarro(int codCliente, String modelo, String placa, String ano, EstiloCarro estilo) {
+		Clientes dono = buscarCliente(codCliente);
+		if (dono == null) {
+			System.out.println("Cliente com código " + codCliente + " não encontrado. Carro não cadastrado.");
+			return null;
+		}
+		Carros novoCarro = new Carros(modelo, placa, ano, estilo);
+		dono.adicionarCarro(novoCarro);
+		System.out.println("Carro " + modelo + " (" + placa + ") vinculado ao cliente " + dono.getNome() + ".");
+		return novoCarro;
+	}
+
+	public static void readClientes() {
+		if (indiceClientes.estaVazia()) {
+			System.out.println("Nenhum cliente cadastrado.");
+			return;
+		}
+		for (Object obj : indiceClientes.obterEmOrdem()) {
+			Clientes c = (Clientes) obj;
+			System.out.println("Código: " + c.getCodIdent() + " | Nome: " + c.getNome() + " | WhatsApp: "
+					+ c.getTelefoneZapZap() + " | E-mail: " + c.getEmail());
+			if (c.getCarros().isEmpty()) {
+				System.out.println("   Nenhum carro associado.");
+			} else {
+				for (Carros carro : c.getCarros()) {
+					System.out.println("   Carro: " + carro.getModelo() + " | Placa: " + carro.getPlaca() + " | Ano: "
+							+ carro.getAno() + " | Estilo: " + carro.getEstilo());
+				}
+			}
+		}
+	}
+
+	public static OS abrirOS(Clientes cliente, Carros carro) {
+		OS novaOs = new OS(cliente, carro);
+		ordensServico.add(novaOs);
+		indiceOS.inserir(novaOs.getNumeroOS(), novaOs);
+		System.out.println("OS #" + novaOs.getNumeroOS() + " aberta com sucesso!");
+		return novaOs;
+	}
+
+	public static OS buscarOS(int numeroOS) {
+		return (OS) indiceOS.buscar(numeroOS);
+	}
+
+	public static void mudarStatusOs(OS os, StatusOs novoStatus) {
+		if (os == null) {
+			System.out.println("OS inexistente.");
+			return;
+		}
+		os.setStatus(novoStatus);
+		System.out.println("OS #" + os.getNumeroOS() + " agora esta " + novoStatus);
+		if (novoStatus == StatusOs.AGUARDANDO_EXECUCAO) {
+			despacharOs(os);
+		}
+	}
+
+	public static void despacharOs(OS os) {
+		if (os.getStatus() == StatusOs.AGUARDANDO_EXECUCAO) {
+			for (Servico s : os.getServicos()) {
+				filaAtendimento.enfileirar(s);
+			}
+			System.out.println("Servicos da OS #" + os.getNumeroOS() + " despachados para a fila com sucesso!");
+		} else {
+			System.out.println("A OS #" + os.getNumeroOS() + " ainda nao esta aguardando execucao. Servicos retidos.");
+		}
+	}
+
+	public static Servico atenderProximoServico() {
+		Servico atendido = filaAtendimento.desenfileirar();
+		if (atendido != null) {
+			System.out.println("Servico em execucao: " + atendido.getDescricaoServico());
+		}
+		return atendido;
+	}
+
+	public static Pedido abrirPedido() {
+		Pedido novoPedido = new Pedido();
+		pedidos.add(novoPedido);
+		indicePedidos.inserir(novoPedido.getCodigoPedido(), novoPedido);
+		System.out.println("Pedido #" + novoPedido.getCodigoPedido() + " aberto com sucesso!");
+		return novoPedido;
+	}
+
+	public static Pedido buscarPedido(int codigoPedido) {
+		return (Pedido) indicePedidos.buscar(codigoPedido);
+	}
+
+	public static List<ItemCatalogo> montarCatalogo() {
+		List<ItemCatalogo> catalogo = new ArrayList<>();
+		catalogo.addAll(pecas);
+		catalogo.addAll(servicos);
+		return catalogo;
+	}
+
+	public static void relatorioClientesEmOrdem() {
+		System.out.println("---- Relatorio de Clientes (Ordenado via Arvore AVL - Em-Ordem) ----");
+		List<Object> ordenados = indiceClientes.obterEmOrdem();
+		if (ordenados.isEmpty()) {
+			System.out.println("Nenhum cliente cadastrado.");
+			return;
+		}
+		System.out.printf("%-8s | %-25s | %-16s | %-25s%n", "Codigo", "Nome", "WhatsApp", "E-mail");
+		for (Object obj : ordenados) {
+			Clientes c = (Clientes) obj;
+			System.out.printf("%-8d | %-25s | %-16s | %-25s%n", c.getCodIdent(), c.getNome(),
+					c.getTelefoneZapZap(), c.getEmail());
+			for (Carros carro : c.getCarros()) {
+				System.out.println("   Carro: " + carro.getModelo() + " | Placa: " + carro.getPlaca()
+						+ " | Ano: " + carro.getAno() + " | Estilo: " + carro.getEstilo());
+			}
+		}
+	}
+
+	public static void relatorioPecasEmOrdem() {
+		System.out.println("---- Catalogo de Pecas (Ordenado via Arvore AVL - Em-Ordem) ----");
+		List<Object> ordenados = indicePecas.obterEmOrdem();
+		if (ordenados.isEmpty()) {
+			System.out.println("Nenhuma peca cadastrada.");
+			return;
+		}
+		System.out.printf("%-8s | %-25s | %-15s | %-6s | %-12s | %-12s%n", "Codigo", "Nome", "Fabricante", "Qtd",
+				"Preco Venda", "Preco Custo");
+		for (Object obj : ordenados) {
+			Pecas p = (Pecas) obj;
+			System.out.printf("%-8d | %-25s | %-15s | %-6d | R$ %-9.2f | R$ %-9.2f%n", p.getCodNumerico(),
+					p.getNomePeca(), p.getNomeFabricante(), p.getQuantidadePeca(), p.getPrecoVenda(),
+					p.getPrecoCusto());
+		}
+	}
+
+	public static void relatorioServicosEmOrdem() {
+		System.out.println("---- Catalogo de Servicos (Ordenado via Arvore AVL - Em-Ordem) ----");
+		List<Object> ordenados = indiceServicos.obterEmOrdem();
+		if (ordenados.isEmpty()) {
+			System.out.println("Nenhum servico cadastrado.");
+			return;
+		}
+		System.out.printf("%-8s | %-30s | %-12s | %-12s%n", "Codigo", "Descricao", "Tempo Estimado", "Valor M.O.");
+		for (Object obj : ordenados) {
+			Servico s = (Servico) obj;
+			System.out.printf("%-8d | %-30s | %-12s | R$ %-9.2f%n", s.getCodNumerico(), s.getDescricaoServico(),
+					s.getTempoEstimado() + " min", s.getValorMaoObra());
+		}
+	}
+
+	public static void relatorioCatalogoEmOrdem() {
+		System.out.println("---- Catalogo (Pecas e Servicos) ordenado por CODIGO_IDENTIFICADOR ----");
+		List<Object> pecasOrdenadas = indicePecas.obterEmOrdem();
+		List<Object> servicosOrdenados = indiceServicos.obterEmOrdem();
+		if (pecasOrdenadas.isEmpty() && servicosOrdenados.isEmpty()) {
+			System.out.println("Nenhum item cadastrado.");
+			return;
+		}
+		System.out.printf("%-8s | %-40s%n", "Codigo", "Nome");
+		int i = 0, j = 0;
+		while (i < pecasOrdenadas.size() && j < servicosOrdenados.size()) {
+			Pecas p = (Pecas) pecasOrdenadas.get(i);
+			Servico s = (Servico) servicosOrdenados.get(j);
+			if (p.getCodigoParaOrdenacao() <= s.getCodigoParaOrdenacao()) {
+				System.out.printf("%-8d | %-40s%n", p.getCodigoParaOrdenacao(), p.getNomeParaOrdenacao());
+				i++;
+			} else {
+				System.out.printf("%-8d | %-40s%n", s.getCodigoParaOrdenacao(), s.getNomeParaOrdenacao());
+				j++;
+			}
+		}
+		while (i < pecasOrdenadas.size()) {
+			Pecas p = (Pecas) pecasOrdenadas.get(i);
+			System.out.printf("%-8d | %-40s%n", p.getCodigoParaOrdenacao(), p.getNomeParaOrdenacao());
+			i++;
+		}
+		while (j < servicosOrdenados.size()) {
+			Servico s = (Servico) servicosOrdenados.get(j);
+			System.out.printf("%-8d | %-40s%n", s.getCodigoParaOrdenacao(), s.getNomeParaOrdenacao());
+			j++;
+		}
+	}
+
+	public static void relatorioCatalogoOrdenado(ChaveOrdenacao chave) {
+		if (chave == ChaveOrdenacao.CODIGO_IDENTIFICADOR) {
+			relatorioCatalogoEmOrdem();
+		} else {
+			OrdenacaoService.imprimirRelatorio(montarCatalogo(), chave);
+		}
+	}
+
+	public static void salvarTudo() {
+		PersistenciaService.exportarPecas(pecas, ARQUIVO_PECAS);
+		PersistenciaService.exportarServicos(servicos, ARQUIVO_SERVICOS);
+		PersistenciaService.exportarClientes(clientes, ARQUIVO_CLIENTES);
+		PersistenciaService.exportarCarros(clientes, ARQUIVO_CARROS);
+		PersistenciaService.exportarOS(ordensServico, ARQUIVO_OS);
+		PersistenciaService.exportarPedidos(pedidos, ARQUIVO_PEDIDOS);
+		System.out.println("Todos os dados foram salvos em arquivos .csv na pasta " + PASTA_DADOS + ".");
+	}
+
+	public static void carregarTudo() {
+		pecas = PersistenciaService.importarPecas(ARQUIVO_PECAS);
+		servicos = PersistenciaService.importarServicos(ARQUIVO_SERVICOS);
+		clientes = PersistenciaService.importarClientes(ARQUIVO_CLIENTES);
+		PersistenciaService.importarCarros(ARQUIVO_CARROS, clientes);
+		ordensServico = PersistenciaService.importarOS(ARQUIVO_OS, clientes, servicos);
+		pedidos = PersistenciaService.importarPedidos(ARQUIVO_PEDIDOS, pecas);
+
+		indicePecas.limpar();
+		for (Pecas p : pecas) {
+			indicePecas.inserir(p.getCodNumerico(), p);
+		}
+
+		indiceServicos.limpar();
+		for (Servico s : servicos) {
+			indiceServicos.inserir(s.getCodNumerico(), s);
+		}
+
+		indiceClientes.limpar();
+		for (Clientes c : clientes) {
+			indiceClientes.inserir(c.getCodIdent(), c);
+		}
+
+		indiceOS.limpar();
+		for (OS os : ordensServico) {
+			indiceOS.inserir(os.getNumeroOS(), os);
+		}
+
+		indicePedidos.limpar();
+		for (Pedido p : pedidos) {
+			indicePedidos.inserir(p.getCodigoPedido(), p);
+		}
+
+		System.out.println("Dados recuperados: " + pecas.size() + " peca(s), " + servicos.size() + " servico(s), "
+				+ clientes.size() + " cliente(s), " + ordensServico.size() + " OS e " + pedidos.size() + " pedido(s).");
+		System.out.println("Indices AVL recarregados: " + indicePecas.getQuantidade() + " peca(s), "
+				+ indiceServicos.getQuantidade() + " servico(s), " + indiceClientes.getQuantidade()
+				+ " cliente(s), " + indiceOS.getQuantidade() + " OS, " + indicePedidos.getQuantidade() + " pedido(s).");
+	}
+}
