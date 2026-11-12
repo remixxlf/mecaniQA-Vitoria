@@ -20,3 +20,35 @@ Neste primeiro desafio, você e sua equipe implementarão um MVP na linguagem de
 * Luis Filipe Silva Lima
 * AGSON ASAFE
 
+
+
+## OAT 4 - A Melhor Rota de Entrega
+
+Modulo de roteamento para a distribuicao de pecas entre o Centro de Distribuicao e as filiais.
+
+### Funcionalidades
+
+* Malha viaria carregada dinamicamente do arquivo `dados/rotas.csv` (formato `Origem;Destino;Distancia_em_Km`), sem nenhuma via escrita no codigo-fonte.
+* Grafo nao direcionado representado por Lista de Adjacencia: cada via e registrada na ida e na volta com o mesmo peso.
+* Algoritmo de Dijkstra implementado do zero, com vetores de distancias, antecessores e vertices visitados.
+* Menu "Logistica de Entrega": informa distancia total, percurso completo e distancia de cada trecho.
+* Integracao com a OAT 2 e a OAT 3: o pedido transportado e localizado na Arvore AVL de pedidos e suas pecas sao listadas.
+
+### Estrutura
+
+* `services/Grafo.java`: vertices, arestas e lista de adjacencia.
+* `services/LeitorRotas.java`: leitura e validacao do `rotas.csv`.
+* `services/Dijkstra.java`: calculo do caminho minimo.
+* `services/RotaEntrega.java`: resultado do calculo (distancia, caminho e trechos).
+* `services/RoteamentoService.java`: carrega a malha e calcula a rota a partir do Centro de Distribuicao.
+* `main/MenuLogistica.java`: menu de Logistica de Entrega.
+* `main/TesteQaOat4.java`: testes automatizados dos cenarios da OAT 4.
+
+### Trocando o mapa
+
+Basta editar `dados/rotas.csv`. O vertice de origem e `Centro_Distribuicao`; se ele nao existir no arquivo, a primeira localidade lida passa a ser a origem.
+
+### Como executar
+
+* Sistema completo: executar `main.Main` (o menu de logistica abre ao final).
+* Testes da OAT 4: executar `main.TesteQaOat4`.
