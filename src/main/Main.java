@@ -6,6 +6,9 @@ import services.Gerenciador;
 
 public class Main {
 	public static void main(String[] args) {
+		// Boa, parabéns por incluir um roteiro completo de testes exercitando todas as operações do CRUD!
+		// Apenas observação: o menu original fornecido no template poderia ter sido mantido integrado
+		// com essas funcionalidades.
 		// Testando as operações do CRUD unificado
 
 		System.out.println("--- Teste de Peças ---");

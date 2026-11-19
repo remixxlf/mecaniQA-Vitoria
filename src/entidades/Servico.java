@@ -2,11 +2,14 @@ package entidades;
 
 public class Servico {
 
+	// Atenção: assim como em Pecas, os atributos deveriam ser explicitamente "public"
+	// e a classe deveria atuar apenas como uma struct (sem construtores e sem getters/setters).
 	int codNumerico;
 	String descricaoServico;
 	int tempoEstimado;
 	double valorMaoObra;
 
+	// Métodos internos (construtor e getters/setters) não eram permitidos nesta entrega de TADs.
 	public Servico(int codNumerico, String descricaoServico, int tempoEstimado, double valorMaoObra) {
 		super();
 		this.codNumerico = codNumerico;

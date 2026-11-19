@@ -1,7 +1,11 @@
 package entidades;
 
+// Pequena observação de nomenclatura: o nome da classe de entidade geralmente fica melhor no singular ("Peca").
 public class Pecas {
 
+	// Atenção: a especificação pedia que as classes de TAD fossem modeladas estritamente como "structs",
+	// ou seja, com todos os atributos declarados como "public" (acessíveis externamente)
+	// e SEM construtores nem métodos getters/setters.
 	int codNumerico;
 	String nomePeca;
 	String nomeFabricante;
@@ -9,6 +13,7 @@ public class Pecas {
 	double precoVenda;
 	double precoCusto;
 
+	// Conforme os critérios do trabalho, não deveriam existir construtores nem getters/setters aqui.
 	public Pecas(int codNumerico, String nomePeca, String nomeFabricante, int quantidadePeca, double precoVenda,
 			double precoCusto) {
 		super();
